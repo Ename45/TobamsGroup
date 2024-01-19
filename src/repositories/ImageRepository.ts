@@ -23,21 +23,32 @@ const createImageUrl = async ( image: string, next: NextFunction ) => {
   }
 };
 
-const findAllImages = async ( next: NextFunction ) => {
+const findAllImages = async (next: NextFunction) => {
   try {
-    const allImages = await Image.find({})
+    const allImages = await Image.find({});
 
     if (allImages.length === 0) {
-      return next(new Error("No available image"))
+      return next(new Error("No available image"));
     }
 
+    const imagesWithSecureUrl = allImages.map((image) => {
+      const randomNumbers = Array.from({ length: 5 }, () => Math.floor(Math.random() * 10000));
+      const secureImageUrl = `${image.imageUrl}/${randomNumbers.join('/')}`;
+
+      return {
+        ...image.toObject(),
+        imageUrl: secureImageUrl,
+      };
+    });
+
     return {
-      data: allImages,
+      data: imagesWithSecureUrl,
     };
   } catch (error) {
     next(error);
   }
-}
+};
+
 
 
 export {
