@@ -1,9 +1,8 @@
 import { NextFunction } from "express";
-import { createImageUrl } from "../repositories/ImageRepository"
+import { createImageUrl, findAllImages } from "../repositories/ImageRepository"
 
 const uploadImage = async ( image: string, next: NextFunction ) => {
   if (!image) {
-    // throw new Error("Image required")
     return next(new Error("Image required"))
   }
 
@@ -12,8 +11,10 @@ const uploadImage = async ( image: string, next: NextFunction ) => {
   return imageUrl
 }
 
-const retrieveImage = async ( id: string ) => {
+const retrieveImage = async ( next: NextFunction ) => {
+  const allImages = await findAllImages( next );
 
+  return allImages
 }
 
 export {
